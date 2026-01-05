@@ -1,23 +1,57 @@
-import logo from './logo.svg';
+
+import { useState } from "react";
 import './App.css';
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+  const [input, setInput] = useState("");
+
+  const addTask = () => {
+    if (input.trim() === "") return;
+   setTasks([...tasks, { text: input, completed: false }]);
+
+    setInput("");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={{ padding: "40px", fontFamily: "Arial" }}>
+      <h1>My To-Do List</h1>
+
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Enter task"
+      />
+      <button onClick={addTask}>Add</button>
+
+      <ol>
+  {tasks.map((task, index) => (
+    <li
+      key={index}
+      style={{
+        textDecoration: task.completed ? "line-through" : "none",
+        opacity: task.completed ? 0.6 : 1,
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={task.completed}
+        onChange={() => {
+          const updatedTasks = [...tasks];
+          updatedTasks[index].completed = !updatedTasks[index].completed;
+          setTasks(updatedTasks);
+        }}
+      />
+
+      <span style={{ marginLeft: "8px" }}>
+        {task.text}
+      </span>
+    </li>
+  ))}
+</ol>
+
+
     </div>
   );
 }
